@@ -26,7 +26,7 @@ import { UsersModule } from './users/users.module';
     // MongooseModule.forRoot(''),
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env.development',
+      envFilePath: '.development.env',
     }),
     AdminModule,
     ScreeningModule,
