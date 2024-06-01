@@ -37,6 +37,7 @@ export class UsersService {
       email,
       password: hashPassword,
       phone,
+      createdAt: new Date(),
     });
     return newRegister;
   }
