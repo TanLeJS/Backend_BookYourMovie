@@ -12,11 +12,16 @@ export class AuthService {
   ) {}
 
   //username password là 2 tham số thư viện trả về
-  async validateUser(username: string, pass: string): Promise<any> {
+  async validateUser(username: string, password: string): Promise<any> {
     const user = await this.usersService.findOneByUsername(username);
     if (user) {
-      const isValid = this.usersService.isValidPassword(pass, user.password);
-      return user;
+      const isValid = this.usersService.isValidPassword(
+        password,
+        user.password,
+      );
+      if (isValid === true) {
+        return user;
+      }
     }
     return null;
   }
@@ -32,9 +37,11 @@ export class AuthService {
     };
     return {
       access_token: this.jwtService.sign(payload),
-      _id,
-      name,
-      email,
+      user: {
+        _id,
+        name,
+        email,
+      },
     };
   }
 
