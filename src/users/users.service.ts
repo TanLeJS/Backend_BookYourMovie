@@ -29,8 +29,6 @@ export class UsersService {
       throw new BadRequestException(`Email ${email} đã tồn tại trên hệ thống`);
     }
 
-    // fetch userRolep
-
     const hashPassword = this.getHashPassword(password);
     const newRegister = await this.userModel.create({
       name,
