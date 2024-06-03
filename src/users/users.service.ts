@@ -3,7 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { compareSync, genSaltSync, hashSync } from 'bcryptjs';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
-import { RegisterUserDto } from './dto/register-user.dto';
+import {
+  RegisterGoogleUserDto,
+  RegisterUserDto,
+} from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
 
@@ -28,16 +31,39 @@ export class UsersService {
     if (isExist) {
       throw new BadRequestException(`Email ${email} đã tồn tại trên hệ thống`);
     }
-
     const hashPassword = this.getHashPassword(password);
     const newRegister = await this.userModel.create({
       name,
       email,
       password: hashPassword,
       phone,
+      type: 'SYSTEM',
       createdAt: new Date(),
     });
     return newRegister;
+  }
+
+  async registerWithGoogle(registerGoogleUserDto: RegisterGoogleUserDto) {
+    const { type, name, email } = registerGoogleUserDto;
+    const isExist = await this.userModel.findOne({ email });
+    const hashPassword = this.getHashPassword(
+      Math.random().toString(36).slice(-8),
+    );
+    if (isExist) {
+      throw new BadRequestException(
+        `Email ${email} has already exist. Please try another different email`,
+      );
+    } else {
+    }
+    const newGoogleRegister = await this.userModel.create({
+      name,
+      email,
+      type,
+      password: hashPassword,
+      phone: '',
+      createdAt: new Date(),
+    });
+    return newGoogleRegister;
   }
 
   findAll() {

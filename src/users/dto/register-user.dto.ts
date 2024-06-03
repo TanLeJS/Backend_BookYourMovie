@@ -14,3 +14,9 @@ export class RegisterUserDto {
   @IsNotEmpty({ message: 'Please fill up your phone' })
   phone: string;
 }
+
+export class RegisterGoogleUserDto {
+  type: string;
+  name: string;
+  email: string;
+}

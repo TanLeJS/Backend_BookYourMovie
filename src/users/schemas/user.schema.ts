@@ -16,7 +16,7 @@ export class User {
   @Prop({ required: false })
   isAdmin: boolean;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   phone: string;
 
   @Prop({ type: Object })
