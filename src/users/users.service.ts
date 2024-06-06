@@ -45,25 +45,23 @@ export class UsersService {
 
   async registerWithGoogle(registerGoogleUserDto: RegisterGoogleUserDto) {
     const { type, name, email } = registerGoogleUserDto;
-    const isExist = await this.userModel.findOne({ email });
+    const isExistUser = await this.userModel.findOne({ email });
     const hashPassword = this.getHashPassword(
       Math.random().toString(36).slice(-8),
     );
-    if (isExist) {
-      throw new BadRequestException(
-        `Email ${email} has already exist. Please try another different email`,
-      );
+    if (isExistUser) {
+      return isExistUser;
     } else {
+      const newGoogleRegister = await this.userModel.create({
+        name,
+        email,
+        type,
+        password: hashPassword,
+        phone: '',
+        createdAt: new Date(),
+      });
+      return newGoogleRegister;
     }
-    const newGoogleRegister = await this.userModel.create({
-      name,
-      email,
-      type,
-      password: hashPassword,
-      phone: '',
-      createdAt: new Date(),
-    });
-    return newGoogleRegister;
   }
 
   findAll() {
