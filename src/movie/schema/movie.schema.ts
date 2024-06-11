@@ -6,25 +6,46 @@ export type MovieDocument = HydratedDocument<Movie>;
 @Schema()
 export class Movie {
   @Prop({ required: true })
-  name: string;
+  adult: boolean;
 
   @Prop({ required: true })
-  image: number;
-
-  @Prop()
-  ratings: string;
-
-  @Prop()
-  director: string;
+  backdrop_path: string;
 
   @Prop({ required: true })
-  summary: string;
+  genre_ids: string[];
 
   @Prop({ required: true })
-  release: number;
+  id: string;
 
   @Prop({ required: true })
-  duration: number;
+  original_language: string;
+
+  @Prop({ required: true })
+  original_title: string;
+
+  @Prop({ required: true })
+  overview: string;
+
+  @Prop({ required: true })
+  popularity: number;
+
+  @Prop({ required: true })
+  poster_path: string;
+
+  @Prop({ required: true })
+  release_date: string;
+
+  @Prop({ required: true })
+  title: string;
+
+  @Prop({ required: true })
+  video: false;
+
+  @Prop({ required: true })
+  vote_average: number;
+
+  @Prop({ required: true })
+  vote_count: number;
 
   @Prop({ required: true })
   screening: {
