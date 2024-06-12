@@ -5,7 +5,7 @@ export type MovieDocument = HydratedDocument<Movie>;
 
 @Schema()
 export class Movie {
-  @Prop({ required: true })
+  @Prop()
   adult: boolean;
 
   @Prop({ required: true })
@@ -15,7 +15,7 @@ export class Movie {
   genre_ids: string[];
 
   @Prop({ required: true })
-  id: string;
+  _id: string;
 
   @Prop({ required: true })
   original_language: string;
@@ -47,11 +47,11 @@ export class Movie {
   @Prop({ required: true })
   vote_count: number;
 
-  @Prop({ required: true })
-  screening: {
-    type: number;
-    default: 0;
-  };
+  // @Prop()
+  // screening: {
+  //   type: number;
+  //   default: 0;
+  // };
 }
 
 export const MovieSchema = SchemaFactory.createForClass(Movie);

@@ -29,7 +29,9 @@ export class UsersService {
     //add logic check email
     const isExist = await this.userModel.findOne({ email });
     if (isExist) {
-      throw new BadRequestException(`Email ${email} đã tồn tại trên hệ thống`);
+      throw new BadRequestException(
+        `Email ${email} is already exist. Try different email `,
+      );
     }
     const hashPassword = this.getHashPassword(password);
     const newRegister = await this.userModel.create({
