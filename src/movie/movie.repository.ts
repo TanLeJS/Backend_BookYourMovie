@@ -29,4 +29,8 @@ export class MoviesRepository {
   async countMovies(): Promise<number> {
     return await this.movieModel.countDocuments().exec();
   }
+
+  async deleteMovieById(id: string): Promise<Movie | null> {
+    return this.movieModel.findOne({ id }).exec();
+  }
 }

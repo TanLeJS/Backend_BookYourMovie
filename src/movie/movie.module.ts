@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ScheduleModule } from '@nestjs/schedule';
 import { MovieController } from './movie.controller';
+import { MoviesRepository } from './movie.repository';
 import { MovieService } from './movie.service';
 import { Movie, MovieSchema } from './schema/movie.schema';
 
@@ -21,6 +22,6 @@ import { Movie, MovieSchema } from './schema/movie.schema';
     ScheduleModule.forRoot(),
   ],
   controllers: [MovieController],
-  providers: [MovieService],
+  providers: [MovieService, MoviesRepository],
 })
 export class MovieModule {}

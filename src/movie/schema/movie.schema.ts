@@ -15,7 +15,7 @@ export class Movie {
   genre_ids: string[];
 
   @Prop({ required: true })
-  _id: string;
+  id: string;
 
   @Prop({ required: true })
   original_language: string;

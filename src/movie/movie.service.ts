@@ -15,7 +15,7 @@ export class MovieService {
     private moviesRepository: MoviesRepository,
   ) {}
 
-  @Cron('0 0 * * *') // This cron job runs every day at midnight
+  @Cron('45 * * * * * ') // This cron job runs every day at midnight
   async handleCronJob() {
     const moviesCount = await this.moviesRepository.countMovies();
     if (moviesCount === 0) {
@@ -39,8 +39,9 @@ export class MovieService {
       const response = await lastValueFrom(
         this.httpService.get(this.apiURL, { headers: this.headersRequest }),
       );
-      const allMovies = response.data;
 
+      const allMovies = response.data.results;
+      console.log('print all movies', allMovies);
       await this.moviesRepository.bulkCreate(allMovies);
       this.logger.debug(`Added ${allMovies.length} movies to the database.`);
     } catch (error) {
@@ -55,14 +56,10 @@ export class MovieService {
       const response = await lastValueFrom(
         this.httpService.get(this.apiURL, { headers: this.headersRequest }),
       );
-      console.log(response);
       const latestMovies = response.data;
-
       // Fetch existing movies
       const existingMovies = await this.moviesRepository.findAllMovies();
-      const existingMovieIds = new Set(
-        existingMovies.map((movie) => movie._id),
-      );
+      const existingMovieIds = new Set(existingMovies.map((movie) => movie.id));
 
       // Filter out movies that already exist
       const newMovies = latestMovies.filter(
@@ -81,21 +78,7 @@ export class MovieService {
     }
   }
 
-  async getMovies() {
+  async getAllMovies() {
     return this.moviesRepository.findAllMovies();
   }
-
-  //   async getCurrentMoviePlaying() {
-  //     return this.httpService
-  //       .get(
-  //         `${this.configService.get<string>('THEMOVIEDB_URI')}movie/now_playing?language=en-US&page=1`,
-  //         { headers: this.headersRequest },
-  //       )
-  //       .pipe(map((res) => res.data?.results))
-  //       .pipe(
-  //         catchError(() => {
-  //           throw new ForbiddenException('API not available');
-  //         }),
-  //       );
-  //   }
 }

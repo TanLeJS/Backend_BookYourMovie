@@ -12,7 +12,6 @@ import { ScreeningModule } from './screening/screening.module';
 import { SeatModule } from './seat/seat.module';
 import { SeatReservedModule } from './seat_reserved/seat_reserved.module';
 import { UsersModule } from './users/users.module';
-import { ApiModule } from './api/api.module';
 
 @Module({
   imports: [
@@ -37,7 +36,6 @@ import { ApiModule } from './api/api.module';
     SeatReservedModule,
     MovieModule,
     AuthModule,
-    ApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
