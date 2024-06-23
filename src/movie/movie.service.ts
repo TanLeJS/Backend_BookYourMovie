@@ -15,7 +15,7 @@ export class MovieService {
     private moviesRepository: MoviesRepository,
   ) {}
 
-  @Cron('45 * * * * * ') // This cron job runs every day at midnight
+  @Cron('5 * * * * * ') // This cron job runs every day at midnight
   async handleCronJob() {
     const moviesCount = await this.moviesRepository.countMovies();
     if (moviesCount === 0) {
@@ -56,14 +56,15 @@ export class MovieService {
       const response = await lastValueFrom(
         this.httpService.get(this.apiURL, { headers: this.headersRequest }),
       );
-      const latestMovies = response.data;
+      const latestMovies = response.data.results;
       // Fetch existing movies
       const existingMovies = await this.moviesRepository.findAllMovies();
-      const existingMovieIds = new Set(existingMovies.map((movie) => movie.id));
-
+      const existingMovieIds = new Set(
+        existingMovies.map((movie) => movie.title),
+      );
       // Filter out movies that already exist
       const newMovies = latestMovies.filter(
-        (movie) => !existingMovieIds.has(movie.id),
+        (movie) => !existingMovieIds.has(movie.title),
       );
 
       // Use bulk create for new movies

@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 export type MovieDocument = HydratedDocument<Movie>;
 
@@ -8,10 +8,13 @@ export class Movie {
   @Prop()
   adult: boolean;
 
-  @Prop({ required: true })
+  @Prop()
+  status: string;
+
+  @Prop()
   backdrop_path: string;
 
-  @Prop({ required: true })
+  @Prop()
   genre_ids: string[];
 
   @Prop({ required: true })
@@ -20,13 +23,13 @@ export class Movie {
   @Prop({ required: true })
   original_language: string;
 
-  @Prop({ required: true })
+  @Prop({})
   original_title: string;
 
   @Prop({ required: true })
   overview: string;
 
-  @Prop({ required: true })
+  @Prop()
   popularity: number;
 
   @Prop({ required: true })
@@ -38,20 +41,65 @@ export class Movie {
   @Prop({ required: true })
   title: string;
 
-  @Prop({ required: true })
+  @Prop()
   video: false;
 
-  @Prop({ required: true })
+  @Prop()
+  trailer: string;
+
+  @Prop()
+  duration: number;
+
+  @Prop()
+  director: string;
+
+  @Prop()
+  actors: string[];
+
+  @Prop()
+  genre: string;
+
+  @Prop()
   vote_average: number;
 
-  @Prop({ required: true })
+  @Prop()
   vote_count: number;
 
-  // @Prop()
-  // screening: {
-  //   type: number;
-  //   default: 0;
-  // };
+  @Prop({ type: Object })
+  screening: {
+    type: number;
+    default: 0;
+  };
+
+  @Prop({ type: Object })
+  createdBy: {
+    _id: mongoose.Schema.Types.ObjectId;
+    email: string;
+  };
+
+  @Prop({ type: Object })
+  updatedBy: {
+    _id: mongoose.Schema.Types.ObjectId;
+    email: string;
+  };
+
+  @Prop({ type: Object })
+  deletedBy: {
+    _id: mongoose.Schema.Types.ObjectId;
+    email: string;
+  };
+
+  @Prop()
+  createdAt: Date;
+
+  @Prop()
+  updatedAt: Date;
+
+  @Prop()
+  isDeleted: boolean;
+
+  @Prop()
+  deleteAt: Date;
 }
 
 export const MovieSchema = SchemaFactory.createForClass(Movie);
