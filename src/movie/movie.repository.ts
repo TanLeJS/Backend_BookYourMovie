@@ -1,14 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { Movie } from 'src/movie/schema/movie.schema';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
+import { Movie, MovieDocument } from 'src/movie/schema/movie.schema';
 
 @Injectable()
 export class MoviesRepository {
-  constructor(@InjectModel(Movie.name) private movieModel: Model<Movie>) {}
+  constructor(
+    @InjectModel(Movie.name) private movieModel: SoftDeleteModel<MovieDocument>,
+  ) {}
 
   async findMovieById(id: string): Promise<Movie | null> {
-    return this.movieModel.findOne({ id }).exec();
+    return this.movieModel.findOne({ _id: id }).exec();
   }
 
   async createMovie(movieData: Partial<Movie>): Promise<Movie> {
@@ -30,7 +32,29 @@ export class MoviesRepository {
     return await this.movieModel.countDocuments().exec();
   }
 
-  async deleteMovieById(id: string): Promise<Movie | null> {
-    return this.movieModel.findOne({ id }).exec();
+  async updateMovieById(id: string, updateMovieDto: Partial<Movie>, user) {
+    return await this.movieModel.updateOne(
+      { _id: id },
+      {
+        ...updateMovieDto,
+        updatedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
+  }
+
+  async deleteMovieById(id: string, user) {
+    await this.movieModel.updateOne(
+      { _id: id },
+      {
+        deletedBy: {
+          _id: user._id,
+          email: user.email,
+        },
+      },
+    );
+    return await this.movieModel.softDelete({ _id: id });
   }
 }

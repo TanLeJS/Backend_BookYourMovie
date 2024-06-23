@@ -38,6 +38,12 @@ export class CreateMovieDto {
   @IsString({ each: true, message: 'Each actor should be a non-empty string' })
   actors: string[];
 
-  @IsNotEmpty({ message: 'Director should not be empty' })
-  genre: string;
+  @IsArray({ message: 'Genre should be an array' })
+  @ArrayNotEmpty({ message: 'Actors array should not be empty' })
+  @IsString({ each: true, message: 'Each actor should be a non-empty string' })
+  @ArrayMinSize(1, { message: 'There should be at least one actor' })
+  genres: string[];
+
+  @IsNotEmpty({ message: 'Duration should not be empty' })
+  duration: number;
 }

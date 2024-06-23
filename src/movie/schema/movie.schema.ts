@@ -57,7 +57,7 @@ export class Movie {
   actors: string[];
 
   @Prop()
-  genre: string;
+  genres: string[];
 
   @Prop()
   vote_average: number;

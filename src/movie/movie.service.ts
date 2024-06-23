@@ -82,4 +82,16 @@ export class MovieService {
   async getAllMovies() {
     return this.moviesRepository.findAllMovies();
   }
+
+  async findOne(id: string) {
+    return this.moviesRepository.findMovieById(id);
+  }
+
+  async update(id, updateMovieDto, user) {
+    return this.moviesRepository.updateMovieById(id, updateMovieDto, user);
+  }
+
+  async remove(id: string, user) {
+    return this.moviesRepository.deleteMovieById(id, user);
+  }
 }
