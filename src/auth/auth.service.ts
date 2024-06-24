@@ -4,7 +4,7 @@ import {
   RegisterGoogleUserDto,
   RegisterUserDto,
 } from 'src/users/dto/register-user.dto';
-import { IUser } from 'src/users/users.interface';
+import { IUser } from 'src/users/user.interface';
 import { UsersService } from 'src/users/users.service';
 
 @Injectable()

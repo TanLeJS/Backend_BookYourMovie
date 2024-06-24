@@ -3,6 +3,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Cron } from '@nestjs/schedule';
 import { lastValueFrom } from 'rxjs';
+import { CreateMovieDto } from './dto/create-movie.dto';
 import { MoviesRepository } from './movie.repository';
 
 @Injectable()
@@ -15,7 +16,7 @@ export class MovieService {
     private moviesRepository: MoviesRepository,
   ) {}
 
-  @Cron('5 * * * * * ') // This cron job runs every day at midnight
+  @Cron('0 0 0 * * * ') // This cron job runs every day at midnight
   async handleCronJob() {
     const moviesCount = await this.moviesRepository.countMovies();
     if (moviesCount === 0) {
@@ -83,15 +84,23 @@ export class MovieService {
     return this.moviesRepository.findAllMovies();
   }
 
+  async create(createMovieDto: CreateMovieDto, user) {
+    return await this.moviesRepository.createMovie(createMovieDto, user);
+  }
+
   async findOne(id: string) {
-    return this.moviesRepository.findMovieById(id);
+    return await this.moviesRepository.findMovieById(id);
   }
 
   async update(id, updateMovieDto, user) {
-    return this.moviesRepository.updateMovieById(id, updateMovieDto, user);
+    return await this.moviesRepository.updateMovieById(
+      id,
+      updateMovieDto,
+      user,
+    );
   }
 
   async remove(id: string, user) {
-    return this.moviesRepository.deleteMovieById(id, user);
+    return await this.moviesRepository.deleteMovieById(id, user);
   }
 }

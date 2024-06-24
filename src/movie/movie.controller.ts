@@ -1,6 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Patch } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { currentUser, Public, ResponseMessage } from 'src/decorator/customize';
 import { IUser } from 'src/users/user.interface';
+import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieService } from './movie.service';
 
@@ -12,6 +21,15 @@ export class MovieController {
   @Get()
   findAllMovies() {
     return this.movieService.getAllMovies();
+  }
+
+  @Post()
+  @ResponseMessage('Create a new movie')
+  createANewMovie(
+    @Body() createMovieDto: CreateMovieDto,
+    @currentUser() user: IUser,
+  ) {
+    return this.movieService.create(createMovieDto, user);
   }
 
   @Get(':id')

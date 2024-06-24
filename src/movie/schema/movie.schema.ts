@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { HydratedDocument } from 'mongoose';
+import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 
 export type MovieDocument = HydratedDocument<Movie>;
 
@@ -17,7 +18,7 @@ export class Movie {
   @Prop()
   genre_ids: string[];
 
-  @Prop({ required: true })
+  @Prop()
   id: string;
 
   @Prop({ required: true })
@@ -103,3 +104,4 @@ export class Movie {
 }
 
 export const MovieSchema = SchemaFactory.createForClass(Movie);
+MovieSchema.plugin(softDeletePlugin);

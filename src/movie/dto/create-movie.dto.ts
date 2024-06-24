@@ -17,6 +17,9 @@ export class CreateMovieDto {
   @IsNotEmpty({ message: 'Name should not be empty' })
   title: string;
 
+  @IsNotEmpty({ message: 'Name should not be empty' })
+  overview: string;
+
   @IsNotEmpty({ message: 'Original language should not be empty' })
   original_language: string;
 
