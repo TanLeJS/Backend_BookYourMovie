@@ -23,6 +23,25 @@ export class MovieController {
     return this.movieService.getAllMovies();
   }
 
+  @Get('current')
+  @ResponseMessage('Fetch all current movies')
+  findCurrentPlayingMovies() {
+    return this.movieService.getCurrentPlayingMovies();
+  }
+
+  @Get('upcoming')
+  @ResponseMessage('Fetch all upcoming movies')
+  findUpComingMovies() {
+    return this.movieService.getUpComingMovies();
+  }
+
+  @Get(':id')
+  @ResponseMessage('Get movie by ID')
+  @Public()
+  findOne(@Param('id') id: string) {
+    return this.movieService.findOne(id);
+  }
+
   @Post()
   @ResponseMessage('Create a new movie')
   createANewMovie(
@@ -30,13 +49,6 @@ export class MovieController {
     @currentUser() user: IUser,
   ) {
     return this.movieService.create(createMovieDto, user);
-  }
-
-  @Get(':id')
-  @ResponseMessage('Get company by ID')
-  @Public()
-  findOne(@Param('id') id: string) {
-    return this.movieService.findOne(id);
   }
 
   @Patch(':id')

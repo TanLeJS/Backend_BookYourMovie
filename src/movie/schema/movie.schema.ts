@@ -27,7 +27,7 @@ export class Movie {
   @Prop({})
   original_title: string;
 
-  @Prop({ required: true })
+  @Prop()
   overview: string;
 
   @Prop()

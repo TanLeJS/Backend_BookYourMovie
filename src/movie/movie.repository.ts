@@ -16,6 +16,16 @@ export class MoviesRepository {
     return this.movieModel.findOne({ _id: id }).exec();
   }
 
+  async findCurrentPlayingMovies() {
+    return await this.movieModel.find({ status: 'currentPlaying' }).exec();
+  }
+
+  async findUpComingMovies(): Promise<Movie[]> {
+    console.log('Querying for upcoming movies');
+
+    return await this.movieModel.find({ status: 'upComing' }).exec();
+  }
+
   async createMovie(movieData: CreateMovieDto, user: IUser) {
     const {
       adult,

@@ -31,7 +31,7 @@ export class MovieService {
     Authorization: `Bearer ${this.configService.get<string>('THEMOVIEDB_ACCESSTOKEN')}`,
   };
 
-  apiURL = `${this.configService.get<string>('THEMOVIEDB_URI')}movie/now_playing?language=en-US&page=1`;
+  apiURL = `${this.configService.get<string>('THEMOVIEDB_URI')}movie/upcoming?language=en-US&page=1`;
 
   private async fetchAndSaveInitialMovies() {
     this.logger.debug('Database is empty. Fetching initial movies from API...');
@@ -42,7 +42,6 @@ export class MovieService {
       );
 
       const allMovies = response.data.results;
-      console.log('print all movies', allMovies);
       await this.moviesRepository.bulkCreate(allMovies);
       this.logger.debug(`Added ${allMovies.length} movies to the database.`);
     } catch (error) {
@@ -82,6 +81,14 @@ export class MovieService {
 
   async getAllMovies() {
     return this.moviesRepository.findAllMovies();
+  }
+
+  async getCurrentPlayingMovies() {
+    return this.moviesRepository.findCurrentPlayingMovies();
+  }
+
+  async getUpComingMovies() {
+    return this.moviesRepository.findCurrentPlayingMovies();
   }
 
   async create(createMovieDto: CreateMovieDto, user) {
