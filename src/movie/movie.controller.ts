@@ -17,22 +17,13 @@ import { MovieService } from './movie.service';
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 
-  @ResponseMessage('Fetch all movies')
+  @ResponseMessage('Fetch movies with status')
   @Get()
-  findAllMovies() {
-    return this.movieService.getAllMovies();
-  }
-
-  @Get('current')
-  @ResponseMessage('Fetch all current movies')
-  findCurrentPlayingMovies() {
-    return this.movieService.getCurrentPlayingMovies();
-  }
-
-  @Get('upcoming')
-  @ResponseMessage('Fetch all upcoming movies')
-  findUpComingMovies() {
-    return this.movieService.getUpComingMovies();
+  findMoviesBasedOnStatus(
+    @Body('status') status: string,
+    @Body('limit') limit: number,
+  ) {
+    return this.movieService.getMoviesWithStatus(status, limit);
   }
 
   @Get(':id')
