@@ -16,17 +16,16 @@ export class MoviesRepository {
     return this.movieModel.findOne({ _id: id }).exec();
   }
 
-  async findMovieWithStatus(status: string, limit: number) {
-    return this.movieModel.find({ status: status }).limit(limit).exec();
+  async findCurrentPlayingMovies() {
+    return await this.movieModel
+      .find({ status: 'currentPlaying' })
+      .limit(20)
+      .exec();
   }
 
-  // async findCurrentPlayingMovies() {
-  //   return await this.movieModel.find({ status: 'currentPlaying' }).exec();
-  // }
-
-  // async findUpComingMovies(): Promise<Movie[]> {
-  //   return await this.movieModel.find({ status: 'upComing' }).exec();
-  // }
+  async findUpComingMovies(): Promise<Movie[]> {
+    return await this.movieModel.find({ status: 'upComing' }).limit(20).exec();
+  }
 
   async createMovie(movieData: CreateMovieDto, user: IUser) {
     const {

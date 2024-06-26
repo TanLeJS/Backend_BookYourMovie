@@ -19,11 +19,22 @@ export class MovieController {
 
   @ResponseMessage('Fetch movies with status')
   @Get()
-  findMoviesBasedOnStatus(
-    @Body('status') status: string,
-    @Body('limit') limit: number,
-  ) {
-    return this.movieService.getMoviesWithStatus(status, limit);
+  findAllMovies() {
+    return this.movieService.getAllMovies();
+  }
+
+  @Public()
+  @ResponseMessage('Fetch movies with status')
+  @Get('current')
+  findCurrentPlayingMovies() {
+    return this.movieService.getCurrentPlayingMovies();
+  }
+
+  @Public()
+  @ResponseMessage('Fetch movies with status')
+  @Get('upcoming')
+  findUpComingMovies() {
+    return this.movieService.getCurrentPlayingMovies();
   }
 
   @Get(':id')

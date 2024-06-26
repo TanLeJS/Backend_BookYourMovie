@@ -83,17 +83,13 @@ export class MovieService {
     return this.moviesRepository.findAllMovies();
   }
 
-  async getMoviesWithStatus(status: string, limit: number) {
-    return await this.moviesRepository.findMovieWithStatus(status, limit);
+  async getCurrentPlayingMovies() {
+    return this.moviesRepository.findCurrentPlayingMovies();
   }
 
-  // async getCurrentPlayingMovies() {
-  //   return this.moviesRepository.findCurrentPlayingMovies();
-  // }
-
-  // async getUpComingMovies() {
-  //   return this.moviesRepository.findCurrentPlayingMovies();
-  // }
+  async getUpComingMovies() {
+    return this.moviesRepository.findCurrentPlayingMovies();
+  }
 
   async create(createMovieDto: CreateMovieDto, user) {
     return await this.moviesRepository.createMovie(createMovieDto, user);

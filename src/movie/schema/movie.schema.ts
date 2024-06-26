@@ -13,6 +13,12 @@ export class Movie {
   status: string;
 
   @Prop()
+  title: string;
+
+  @Prop()
+  genres: string[];
+
+  @Prop()
   backdrop_path: string;
 
   @Prop()
@@ -21,7 +27,7 @@ export class Movie {
   @Prop()
   id: string;
 
-  @Prop({ required: true })
+  @Prop()
   original_language: string;
 
   @Prop({})
@@ -33,14 +39,11 @@ export class Movie {
   @Prop()
   popularity: number;
 
-  @Prop({ required: true })
+  @Prop()
   poster_path: string;
 
-  @Prop({ required: true })
+  @Prop()
   release_date: string;
-
-  @Prop({ required: true })
-  title: string;
 
   @Prop()
   video: false;
@@ -56,9 +59,6 @@ export class Movie {
 
   @Prop()
   actors: string[];
-
-  @Prop()
-  genres: string[];
 
   @Prop()
   vote_average: number;
