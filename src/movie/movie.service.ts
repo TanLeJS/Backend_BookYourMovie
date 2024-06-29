@@ -88,7 +88,7 @@ export class MovieService {
   }
 
   async getUpComingMovies() {
-    return this.moviesRepository.findCurrentPlayingMovies();
+    return this.moviesRepository.findUpComingMovies();
   }
 
   async create(createMovieDto: CreateMovieDto, user) {

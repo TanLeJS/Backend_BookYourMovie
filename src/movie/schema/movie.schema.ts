@@ -16,7 +16,7 @@ export class Movie {
   title: string;
 
   @Prop()
-  genres: string[];
+  genres: string;
 
   @Prop()
   backdrop_path: string;
@@ -58,7 +58,7 @@ export class Movie {
   director: string;
 
   @Prop()
-  actors: string[];
+  actors: string;
 
   @Prop()
   vote_average: number;

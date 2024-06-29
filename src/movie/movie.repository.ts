@@ -24,7 +24,7 @@ export class MoviesRepository {
   }
 
   async findUpComingMovies(): Promise<Movie[]> {
-    return await this.movieModel.find({ status: 'upComing' }).limit(20).exec();
+    return await this.movieModel.find({ status: 'upComing' }).exec();
   }
 
   async createMovie(movieData: CreateMovieDto, user: IUser) {

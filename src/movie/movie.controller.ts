@@ -34,7 +34,7 @@ export class MovieController {
   @ResponseMessage('Fetch movies with status')
   @Get('upcoming')
   findUpComingMovies() {
-    return this.movieService.getCurrentPlayingMovies();
+    return this.movieService.getUpComingMovies();
   }
 
   @Get(':id')
