@@ -91,6 +91,10 @@ export class MovieService {
     return this.moviesRepository.findUpComingMovies();
   }
 
+  async getFavoriteMovies() {
+    return this.moviesRepository.findFavoriteMovies();
+  }
+
   async create(createMovieDto: CreateMovieDto, user) {
     return await this.moviesRepository.createMovie(createMovieDto, user);
   }

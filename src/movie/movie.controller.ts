@@ -24,17 +24,24 @@ export class MovieController {
   }
 
   @Public()
-  @ResponseMessage('Fetch movies with status')
+  @ResponseMessage('Fetch current movies with status')
   @Get('current')
   findCurrentPlayingMovies() {
     return this.movieService.getCurrentPlayingMovies();
   }
 
   @Public()
-  @ResponseMessage('Fetch movies with status')
+  @ResponseMessage('Fetch upcoming movies with status')
   @Get('upcoming')
   findUpComingMovies() {
     return this.movieService.getUpComingMovies();
+  }
+
+  @Public()
+  @ResponseMessage('Fetch favorite movies with status')
+  @Get('favorite')
+  findFavoriteMovies() {
+    return this.movieService.getFavoriteMovies();
   }
 
   @Get(':id')

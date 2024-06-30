@@ -27,6 +27,13 @@ export class MoviesRepository {
     return await this.movieModel.find({ status: 'upComing' }).exec();
   }
 
+  async findFavoriteMovies(): Promise<Movie[]> {
+    return await this.movieModel
+      .find({ status: 'currentPlaying', vote_average: { $gte: 6.5 } })
+      .limit(10)
+      .exec();
+  }
+
   async createMovie(movieData: CreateMovieDto, user: IUser) {
     const {
       adult,
