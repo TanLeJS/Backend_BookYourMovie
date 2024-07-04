@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { currentUser, Public, ResponseMessage } from 'src/decorator/customize';
 import { IUser } from 'src/users/user.interface';
@@ -16,6 +17,17 @@ import { MovieService } from './movie.service';
 @Controller('movie')
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
+
+  @Public()
+  @Get()
+  @ResponseMessage('Fetch List Movies with Paginate')
+  findAll(
+    @Query('current') currentPage: string, // const currentPage: string = req.query.page
+    @Query('pageSize') limit: string,
+    @Query() qs: string,
+  ) {
+    return this.movieService.findMoviesWithPaginate(+currentPage, +limit, qs);
+  }
 
   @ResponseMessage('Fetch movies with status')
   @Get()
@@ -35,13 +47,6 @@ export class MovieController {
   @Get('upcoming')
   findUpComingMovies() {
     return this.movieService.getUpComingMovies();
-  }
-
-  @Public()
-  @ResponseMessage('Fetch favorite movies with status')
-  @Get('favorite')
-  findFavoriteMovies() {
-    return this.movieService.getFavoriteMovies();
   }
 
   @Get(':id')

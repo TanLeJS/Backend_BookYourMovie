@@ -8,7 +8,8 @@ import { AuditoriumModule } from './auditorium/auditorium.module';
 import { AuthModule } from './auth/auth.module';
 import { MovieModule } from './movie/movie.module';
 import { ReservationModule } from './reservation/reservation.module';
-import { ScreeningModule } from './screening/screening.module';
+import { ScheduleModule } from './schedule/schedule.module';
+
 import { SeatModule } from './seat/seat.module';
 import { SeatReservedModule } from './seat_reserved/seat_reserved.module';
 import { UsersModule } from './users/users.module';
@@ -29,13 +30,13 @@ import { UsersModule } from './users/users.module';
       envFilePath: '.development.env',
     }),
     AdminModule,
-    ScreeningModule,
     ReservationModule,
     AuditoriumModule,
     SeatModule,
     SeatReservedModule,
     MovieModule,
     AuthModule,
+    ScheduleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

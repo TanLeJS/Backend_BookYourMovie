@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import aqp from 'api-query-params';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Movie, MovieDocument } from 'src/movie/schema/movie.schema';
 import { IUser } from 'src/users/user.interface';
@@ -11,6 +12,85 @@ export class MoviesRepository {
     @InjectModel(Movie.name)
     private movieModel: SoftDeleteModel<MovieDocument>,
   ) {}
+
+  'genres': [
+    {
+      id: 28;
+      name: 'Action';
+    },
+    {
+      id: 12;
+      name: 'Adventure';
+    },
+    {
+      id: 16;
+      name: 'Animation';
+    },
+    {
+      id: 35;
+      name: 'Comedy';
+    },
+    {
+      id: 80;
+      name: 'Crime';
+    },
+    {
+      id: 99;
+      name: 'Documentary';
+    },
+    {
+      id: 18;
+      name: 'Drama';
+    },
+    {
+      id: 10751;
+      name: 'Family';
+    },
+    {
+      id: 14;
+      name: 'Fantasy';
+    },
+    {
+      id: 36;
+      name: 'History';
+    },
+    {
+      id: 27;
+      name: 'Horror';
+    },
+    {
+      id: 10402;
+      name: 'Music';
+    },
+    {
+      id: 9648;
+      name: 'Mystery';
+    },
+    {
+      id: 10749;
+      name: 'Romance';
+    },
+    {
+      id: 878;
+      name: 'Science Fiction';
+    },
+    {
+      id: 10770;
+      name: 'TV Movie';
+    },
+    {
+      id: 53;
+      name: 'Thriller';
+    },
+    {
+      id: 10752;
+      name: 'War';
+    },
+    {
+      id: 37;
+      name: 'Western';
+    },
+  ];
 
   async findMovieById(id: string): Promise<Movie | null> {
     return this.movieModel.findOne({ _id: id }).exec();
@@ -25,13 +105,6 @@ export class MoviesRepository {
 
   async findUpComingMovies(): Promise<Movie[]> {
     return await this.movieModel.find({ status: 'upComing' }).exec();
-  }
-
-  async findFavoriteMovies(): Promise<Movie[]> {
-    return await this.movieModel
-      .find({ status: 'currentPlaying', vote_average: { $gte: 6.5 } })
-      .limit(10)
-      .exec();
   }
 
   async createMovie(movieData: CreateMovieDto, user: IUser) {
@@ -84,6 +157,37 @@ export class MoviesRepository {
 
   async findAllMovies(): Promise<Movie[]> {
     return await this.movieModel.find().exec();
+  }
+
+  async findAllMoviesWithPaginate(
+    currentPage: number,
+    limit: number,
+    qs: string,
+  ) {
+    const { filter, sort, population } = aqp(qs);
+    delete filter.current;
+    delete filter.pageSize;
+    const offset = (currentPage - 1) * limit;
+    const defaultLimit = limit ? limit : 20;
+    const totalItems = (await this.movieModel.find(filter)).length;
+    const totalPages = Math.ceil(totalItems / defaultLimit);
+    const result = await this.movieModel
+      .find(filter)
+      .skip(offset)
+      .limit(defaultLimit)
+      .sort(sort as any)
+      .populate(population)
+      .exec();
+
+    return {
+      meta: {
+        current: currentPage,
+        pageSize: defaultLimit,
+        pages: totalPages,
+        total: totalItems,
+      },
+      result, //kết quả query
+    };
   }
 
   async countMovies(): Promise<number> {

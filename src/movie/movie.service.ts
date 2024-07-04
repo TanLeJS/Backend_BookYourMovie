@@ -31,11 +31,10 @@ export class MovieService {
     Authorization: `Bearer ${this.configService.get<string>('THEMOVIEDB_ACCESSTOKEN')}`,
   };
 
-  apiURL = `${this.configService.get<string>('THEMOVIEDB_URI')}movie/upcoming?language=en-US&page=1`;
+  apiURL = `${this.configService.get<string>('THEMOVIEDB_URI')}movie/now_playing?language=en-US&page=1`;
 
   private async fetchAndSaveInitialMovies() {
     this.logger.debug('Database is empty. Fetching initial movies from API...');
-
     try {
       const response = await lastValueFrom(
         this.httpService.get(this.apiURL, { headers: this.headersRequest }),
@@ -83,16 +82,20 @@ export class MovieService {
     return this.moviesRepository.findAllMovies();
   }
 
+  async findMoviesWithPaginate(currentPage: number, limit: number, qs: string) {
+    return await this.moviesRepository.findAllMoviesWithPaginate(
+      currentPage,
+      limit,
+      qs,
+    );
+  }
+
   async getCurrentPlayingMovies() {
     return this.moviesRepository.findCurrentPlayingMovies();
   }
 
   async getUpComingMovies() {
     return this.moviesRepository.findUpComingMovies();
-  }
-
-  async getFavoriteMovies() {
-    return this.moviesRepository.findFavoriteMovies();
   }
 
   async create(createMovieDto: CreateMovieDto, user) {
