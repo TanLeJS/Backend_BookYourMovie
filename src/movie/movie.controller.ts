@@ -11,6 +11,7 @@ import {
 import { currentUser, Public, ResponseMessage } from 'src/decorator/customize';
 import { IUser } from 'src/users/user.interface';
 import { CreateMovieDto } from './dto/create-movie.dto';
+
 import { UpdateMovieDto } from './dto/update-movie.dto';
 import { MovieService } from './movie.service';
 
@@ -20,13 +21,12 @@ export class MovieController {
 
   @Public()
   @Get()
-  @ResponseMessage('Fetch List Movies with Paginate')
   findAll(
-    @Query('current') currentPage: string, // const currentPage: string = req.query.page
-    @Query('pageSize') limit: string,
-    @Query() qs: string,
+    @Query('current') currentPage: string, //
+    @Query('limit') limit: string,
+    @Query('q') type: string,
   ) {
-    return this.movieService.findMoviesWithPaginate(+currentPage, +limit, qs);
+    return this.movieService.findMoviesWithPaginate(+currentPage, +limit, type);
   }
 
   @ResponseMessage('Fetch movies with status')

@@ -82,11 +82,11 @@ export class MovieService {
     return this.moviesRepository.findAllMovies();
   }
 
-  async findMoviesWithPaginate(currentPage: number, limit: number, qs: string) {
+  async findMoviesWithPaginate(currentPage: number, limit: number, type: string) {
     return await this.moviesRepository.findAllMoviesWithPaginate(
       currentPage,
       limit,
-      qs,
+      type,
     );
   }
 

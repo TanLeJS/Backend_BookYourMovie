@@ -1,96 +1,39 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import aqp from 'api-query-params';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Movie, MovieDocument } from 'src/movie/schema/movie.schema';
 import { IUser } from 'src/users/user.interface';
 import { CreateMovieDto } from './dto/create-movie.dto';
 import { UpdateMovieDto } from './dto/update-movie.dto';
+
+const genresDictionary = {
+  28: 'Action',
+  12: 'Adventure',
+  16: 'Animation',
+  35: 'Comedy',
+  80: 'Crime',
+  99: 'Documentary',
+  18: 'Drama',
+  10751: 'Family',
+  14: 'Fantasy',
+  36: 'History',
+  27: 'Horror',
+  10402: 'Music',
+  9648: 'Mystery',
+  10749: 'Romance',
+  878: 'Science Fiction',
+  10770: 'TV Movie',
+  53: 'Thriller',
+  10752: 'War',
+  37: 'Western',
+};
+
 @Injectable()
 export class MoviesRepository {
   constructor(
     @InjectModel(Movie.name)
     private movieModel: SoftDeleteModel<MovieDocument>,
   ) {}
-
-  'genres': [
-    {
-      id: 28;
-      name: 'Action';
-    },
-    {
-      id: 12;
-      name: 'Adventure';
-    },
-    {
-      id: 16;
-      name: 'Animation';
-    },
-    {
-      id: 35;
-      name: 'Comedy';
-    },
-    {
-      id: 80;
-      name: 'Crime';
-    },
-    {
-      id: 99;
-      name: 'Documentary';
-    },
-    {
-      id: 18;
-      name: 'Drama';
-    },
-    {
-      id: 10751;
-      name: 'Family';
-    },
-    {
-      id: 14;
-      name: 'Fantasy';
-    },
-    {
-      id: 36;
-      name: 'History';
-    },
-    {
-      id: 27;
-      name: 'Horror';
-    },
-    {
-      id: 10402;
-      name: 'Music';
-    },
-    {
-      id: 9648;
-      name: 'Mystery';
-    },
-    {
-      id: 10749;
-      name: 'Romance';
-    },
-    {
-      id: 878;
-      name: 'Science Fiction';
-    },
-    {
-      id: 10770;
-      name: 'TV Movie';
-    },
-    {
-      id: 53;
-      name: 'Thriller';
-    },
-    {
-      id: 10752;
-      name: 'War';
-    },
-    {
-      id: 37;
-      name: 'Western';
-    },
-  ];
 
   async findMovieById(id: string): Promise<Movie | null> {
     return this.movieModel.findOne({ _id: id }).exec();
@@ -162,27 +105,30 @@ export class MoviesRepository {
   async findAllMoviesWithPaginate(
     currentPage: number,
     limit: number,
-    qs: string,
+    type: string,
   ) {
-    const { filter, sort, population } = aqp(qs);
-    delete filter.current;
-    delete filter.pageSize;
+    let typeToSort = null;
+    Object.entries(genresDictionary).forEach(([key, value]) => {
+      if (type === value) {
+        typeToSort = key;
+      }
+    });
+    let filter = {};
+    if (typeToSort !== null) {
+      filter = { genre_ids: { $in: [parseInt(typeToSort)] } };
+    }
+
     const offset = (currentPage - 1) * limit;
-    const defaultLimit = limit ? limit : 20;
-    const totalItems = (await this.movieModel.find(filter)).length;
+    const defaultLimit = limit ?? 20;
+    const totalItems = await this.movieModel.countDocuments(filter);
     const totalPages = Math.ceil(totalItems / defaultLimit);
     const result = await this.movieModel
       .find(filter)
       .skip(offset)
       .limit(defaultLimit)
-      .sort(sort as any)
-      .populate(population)
       .exec();
-
     return {
-      meta: {
-        current: currentPage,
-        pageSize: defaultLimit,
+      pagination: {
         pages: totalPages,
         total: totalItems,
       },
