@@ -65,6 +65,12 @@ export class MovieController {
     return this.movieService.create(createMovieDto, user);
   }
 
+  // @Patch(':id')
+  // @Public()
+  // updateTrailer(@Param('id') id: string) {
+  //   return this.movieService.updateTrailer(+id);
+  // }
+
   @Patch(':id')
   update(
     @Param('id') id: string,

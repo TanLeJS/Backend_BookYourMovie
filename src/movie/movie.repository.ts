@@ -1,5 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import axios from 'axios';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { Movie, MovieDocument } from 'src/movie/schema/movie.schema';
 import { IUser } from 'src/users/user.interface';
@@ -132,12 +133,39 @@ export class MoviesRepository {
         pages: totalPages,
         total: totalItems,
       },
-      result, //kết quả query
+      result, //
     };
   }
 
   async countMovies(): Promise<number> {
     return await this.movieModel.countDocuments().exec();
+  }
+
+  async updateMovieWithTrailer(movieId: number): Promise<void> {
+    const url = `https://api.themoviedb.org/3/movie/${movieId}/videos?language=en-US`;
+
+    try {
+      const response = await axios.get(url);
+      const data = response.data;
+
+      const trailer = data.results.find(
+        (video) => video.type === 'Trailer' && video.site === 'YouTube',
+      );
+
+      if (trailer) {
+        await this.movieModel.updateOne(
+          { id: movieId },
+          { trailer: trailer.key },
+        );
+        console.log(
+          `Updated movie ID ${movieId} with YouTube key: ${trailer.key}`,
+        );
+      } else {
+        console.log(`No trailer found for movie ID ${movieId}`);
+      }
+    } catch (error) {
+      console.error(`Failed to update movie ID ${movieId}:`, error);
+    }
   }
 
   async updateMovieById(id: string, updateMovieDto: UpdateMovieDto, user) {
