@@ -8,11 +8,15 @@ import { AuditoriumModule } from './auditorium/auditorium.module';
 import { AuthModule } from './auth/auth.module';
 import { MovieModule } from './movie/movie.module';
 import { ReservationModule } from './reservation/reservation.module';
-import { ScheduleModule } from './schedule/schedule.module';
+import { ScheduleModule } from './schedules/schedules.module';
 
 import { SeatModule } from './seat/seat.module';
 import { SeatReservedModule } from './seat_reserved/seat_reserved.module';
 import { UsersModule } from './users/users.module';
+import { BookingModule } from './booking/booking.module';
+import { TheatersModule } from './theaters/theaters.module';
+import { PaymentModule } from './payment/payment.module';
+import { PaymentsModule } from './payments/payments.module';
 
 @Module({
   imports: [
@@ -37,6 +41,10 @@ import { UsersModule } from './users/users.module';
     MovieModule,
     AuthModule,
     ScheduleModule,
+    BookingModule,
+    TheatersModule,
+    PaymentModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
