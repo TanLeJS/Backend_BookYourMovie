@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 import { Movie } from 'src/movie/schema/movie.schema';
+import { Screen } from 'src/screens/schema/screen.schema';
 
 @Schema({ timestamps: true })
 export class Schedule {

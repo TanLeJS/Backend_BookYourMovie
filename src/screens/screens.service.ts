@@ -1,26 +1,89 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
+import { IUser } from 'src/users/user.interface';
 import { CreateScreenDto } from './dto/create-screen.dto';
 import { UpdateScreenDto } from './dto/update-screen.dto';
+import { Screen, ScreenDocument } from './schema/screen.schema';
 
 @Injectable()
 export class ScreensService {
-  create(createScreenDto: CreateScreenDto) {
-    return 'This action adds a new screen';
+  constructor(
+    @InjectModel(Screen.name)
+    private screenModel: SoftDeleteModel<ScreenDocument>,
+  ) {}
+
+  async create(createScreenDto: CreateScreenDto, user: IUser) {
+    const { name, totalSeats, theater } = createScreenDto;
+    const { email, _id } = user;
+
+    const newScreen = await this.screenModel.create({
+      name,
+      totalSeats,
+      theater,
+      createdBy: { _id, email },
+    });
+    return {
+      _id: newScreen?._id,
+      createdAt: newScreen?.createdAt,
+    };
   }
 
-  findAll() {
-    return `This action returns all screens`;
+  async findAll() {
+    return this.screenModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} screen`;
+  async findOne(id: string) {
+    const screen = await this.screenModel.findById(id);
+    if (!screen) {
+      throw new NotFoundException(`Schedule #${id} not found`);
+    }
+    return screen;
   }
 
-  update(id: number, updateScreenDto: UpdateScreenDto) {
-    return `This action updates a #${id} screen`;
+  async update(id: string, updateScreenDto: UpdateScreenDto, user) {
+    const existingScreen = await this.screenModel
+      .findByIdAndUpdate(id, updateScreenDto, { new: true })
+      .exec();
+    if (!existingScreen) {
+      throw new NotFoundException(`Schedule #${id} not found`);
+    }
+
+    existingScreen.updatedBy = {
+      _id: user._id,
+      email: user.email,
+    };
+
+    await existingScreen.save();
+    return existingScreen;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} screen`;
+  async remove(id: string, user) {
+    const screen = await this.screenModel.findById(id);
+    if (!screen) {
+      throw new NotFoundException(`Schedule #${id} not found`);
+    }
+
+    await this.screenModel.updateOne(
+      { _id: id },
+      {
+        $set: {
+          deletedBy: {
+            _id: user._id,
+            email: user.email,
+          },
+        },
+      },
+    );
+
+    await this.screenModel.softDelete({ _id: id });
+
+    // Return the schedule with 'deletedBy' field updated
+    screen.deletedBy = {
+      _id: user._id,
+      email: user.email,
+    };
+
+    return screen;
   }
 }
