@@ -4,19 +4,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { AuditoriumModule } from './auditorium/auditorium.module';
 import { AuthModule } from './auth/auth.module';
-import { MovieModule } from './movie/movie.module';
-import { ReservationModule } from './reservation/reservation.module';
-import { ScheduleModule } from './schedules/schedules.module';
-
-import { SeatModule } from './seat/seat.module';
-import { SeatReservedModule } from './seat_reserved/seat_reserved.module';
-import { UsersModule } from './users/users.module';
 import { BookingModule } from './booking/booking.module';
-import { TheatersModule } from './theaters/theaters.module';
-import { PaymentModule } from './payment/payment.module';
+import { MovieModule } from './movie/movie.module';
 import { PaymentsModule } from './payments/payments.module';
+import { ScheduleModule } from './schedules/schedules.module';
+import { TheatersModule } from './theaters/theaters.module';
+import { UsersModule } from './users/users.module';
+import { ScreensModule } from './screens/screens.module';
 
 @Module({
   imports: [
@@ -34,17 +29,13 @@ import { PaymentsModule } from './payments/payments.module';
       envFilePath: '.development.env',
     }),
     AdminModule,
-    ReservationModule,
-    AuditoriumModule,
-    SeatModule,
-    SeatReservedModule,
     MovieModule,
     AuthModule,
     ScheduleModule,
     BookingModule,
     TheatersModule,
-    PaymentModule,
     PaymentsModule,
+    ScreensModule,
   ],
   controllers: [AppController],
   providers: [AppService],

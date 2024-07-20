@@ -1,26 +1,103 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
+import { IUser } from 'src/users/user.interface';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
+import { Schedule, ScheduleDocument } from './schema/schedule.schema';
 
 @Injectable()
 export class ScheduleService {
-  create(createScheduleDto: CreateScheduleDto) {
-    return 'This action adds a new schedule';
+  constructor(
+    @InjectModel(Schedule.name)
+    private scheduleModel: SoftDeleteModel<ScheduleDocument>,
+  ) {}
+
+  async create(createScheduleDto: CreateScheduleDto, user: IUser) {
+    const { movie, screen, date, time, seats } = createScheduleDto;
+    const { email, _id } = user;
+
+    const newSchedule = await this.scheduleModel.create({
+      movie,
+      screen,
+      date,
+      time,
+      seats,
+      createdBy: { _id, email },
+    });
+    return {
+      _id: newSchedule?._id,
+      createdAt: newSchedule?.createdAt,
+    };
   }
 
-  findAll() {
-    return `This action returns all schedule`;
+  async findAll(): Promise<Schedule[]> {
+    return this.scheduleModel
+      .find()
+      .populate('movie')
+      .populate('screen')
+      .exec();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} schedule`;
+  async findOne(id: string): Promise<Schedule> {
+    const schedule = await this.scheduleModel
+      .findById(id)
+      .populate('movie')
+      .populate('screen')
+      .exec();
+    if (!schedule) {
+      throw new NotFoundException(`Schedule #${id} not found`);
+    }
+    return schedule;
   }
 
-  update(id: number, updateScheduleDto: UpdateScheduleDto) {
-    return `This action updates a #${id} schedule`;
+  async update(
+    id: string,
+    updateScheduleDto: UpdateScheduleDto,
+    user: IUser,
+  ): Promise<Schedule> {
+    const existingSchedule = await this.scheduleModel
+      .findByIdAndUpdate(id, updateScheduleDto, { new: true })
+      .exec();
+    if (!existingSchedule) {
+      throw new NotFoundException(`Schedule #${id} not found`);
+    }
+
+    existingSchedule.updatedBy = {
+      _id: user._id,
+      email: user.email,
+    };
+
+    await existingSchedule.save();
+    return existingSchedule;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} schedule`;
+  async remove(id: string, user: IUser): Promise<Schedule> {
+    const schedule = await this.scheduleModel.findById(id);
+    if (!schedule) {
+      throw new NotFoundException(`Schedule #${id} not found`);
+    }
+
+    await this.scheduleModel.updateOne(
+      { _id: id },
+      {
+        $set: {
+          deletedBy: {
+            _id: user._id,
+            email: user.email,
+          },
+        },
+      },
+    );
+
+    await this.scheduleModel.softDelete({ _id: id });
+
+    // Return the schedule with 'deletedBy' field updated
+    schedule.deletedBy = {
+      _id: user._id,
+      email: user.email,
+    };
+
+    return schedule;
   }
 }
