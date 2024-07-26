@@ -1,11 +1,4 @@
-import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsDateString,
-  IsNotEmpty,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
+import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
 class SeatDto {
   @IsString()
@@ -34,8 +27,8 @@ export class CreateScheduleDto {
   @IsString()
   time: string;
 
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => SeatDto)
-  seats: SeatDto[];
+  // @IsArray()
+  // @ValidateNested({ each: true })
+  // @Type(() => SeatDto)
+  // seats: SeatDto[];
 }
