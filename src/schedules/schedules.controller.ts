@@ -6,8 +6,10 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { currentUser } from 'src/decorator/customize';
+import { Date } from 'mongoose';
+import { currentUser, Public } from 'src/decorator/customize';
 import { IUser } from 'src/users/user.interface';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
@@ -25,9 +27,13 @@ export class ScheduleController {
     return this.scheduleService.create(createScheduleDto, user);
   }
 
+  @Public()
   @Get()
-  findAll() {
-    return this.scheduleService.findAll();
+  findScheduleOfMovieByDate(
+    @Query('movieID') movieID: string, //
+    @Query('date') date: Date,
+  ) {
+    return this.scheduleService.findScheduleByDate(movieID, date);
   }
 
   @Get(':id')

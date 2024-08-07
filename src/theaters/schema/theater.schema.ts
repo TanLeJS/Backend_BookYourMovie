@@ -4,6 +4,9 @@ import { softDeletePlugin } from 'soft-delete-plugin-mongoose';
 
 @Schema({ timestamps: true })
 export class Theater {
+  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  _id: mongoose.Schema.Types.ObjectId;
+
   @Prop({ type: String, required: true })
   name: string;
 

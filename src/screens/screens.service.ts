@@ -33,6 +33,10 @@ export class ScreensService {
     return this.screenModel.find();
   }
 
+  async findScreenByTheatre() {
+    return this.screenModel.find();
+  }
+
   async findOne(id: string) {
     const screen = await this.screenModel.findById(id);
     if (!screen) {

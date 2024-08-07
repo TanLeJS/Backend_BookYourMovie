@@ -27,6 +27,10 @@ export class CreateScheduleDto {
   @IsString()
   time: string;
 
+  @IsNotEmpty()
+  @IsString()
+  format: string;
+
   // @IsArray()
   // @ValidateNested({ each: true })
   // @Type(() => SeatDto)

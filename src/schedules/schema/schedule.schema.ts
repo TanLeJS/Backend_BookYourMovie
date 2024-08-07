@@ -18,6 +18,9 @@ export class Schedule {
   @Prop({ type: String, required: true })
   time: string;
 
+  @Prop({ type: String, required: true })
+  format: string;
+
   @Prop({
     type: [
       {

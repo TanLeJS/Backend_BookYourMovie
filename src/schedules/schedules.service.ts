@@ -1,10 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+import { Date, Document } from 'mongoose';
 import { SoftDeleteModel } from 'soft-delete-plugin-mongoose';
 import { IUser } from 'src/users/user.interface';
 import { CreateScheduleDto } from './dto/create-schedule.dto';
 import { UpdateScheduleDto } from './dto/update-schedule.dto';
 import { Schedule, ScheduleDocument } from './schema/schedule.schema';
+
+interface Theater extends Document {}
 
 @Injectable()
 export class ScheduleService {
@@ -14,7 +17,7 @@ export class ScheduleService {
   ) {}
 
   async create(createScheduleDto: CreateScheduleDto, user: IUser) {
-    const { movie, screen, date, time } = createScheduleDto;
+    const { movie, screen, date, time, format } = createScheduleDto;
     const { email, _id } = user;
 
     const newSchedule = await this.scheduleModel.create({
@@ -22,6 +25,7 @@ export class ScheduleService {
       screen,
       date,
       time,
+      format,
       createdBy: { _id, email },
     });
     return {
@@ -48,6 +52,39 @@ export class ScheduleService {
       throw new NotFoundException(`Schedule #${id} not found`);
     }
     return schedule;
+  }
+
+  async findScheduleByDate(movieID: string, date: Date) {
+    // Fetch and populate schedules
+    const schedules = await this.scheduleModel
+      .find({
+        movie: movieID,
+        date: date,
+      })
+      .populate({
+        path: 'screen',
+        populate: {
+          path: 'theater',
+        },
+      })
+      .exec();
+
+    // Group schedules by theater
+    const schedulesByTheater = schedules.reduce((acc, schedule) => {
+      const theaterID = schedule.screen.theater._id.toString();
+
+      if (!acc[theaterID]) {
+        acc[theaterID] = {
+          theater: schedule.screen.theater,
+          schedules: [],
+        };
+      }
+      acc[theaterID].schedules.push(schedule);
+      return acc;
+    }, {});
+
+    // Convert the grouped schedules object into an array of objects
+    return Object.values(schedulesByTheater);
   }
 
   async update(
