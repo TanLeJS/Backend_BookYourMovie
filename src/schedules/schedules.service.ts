@@ -72,19 +72,33 @@ export class ScheduleService {
     // Group schedules by theater
     const schedulesByTheater = schedules.reduce((acc, schedule) => {
       const theaterID = schedule.screen.theater._id.toString();
+      const format = schedule.format;
 
       if (!acc[theaterID]) {
         acc[theaterID] = {
           theater: schedule.screen.theater,
-          schedules: [],
+          formats: {},
         };
       }
-      acc[theaterID].schedules.push(schedule);
+
+      if (!acc[theaterID].formats[format]) {
+        acc[theaterID].formats[format] = [];
+      }
+
+      acc[theaterID].formats[format].push(schedule);
       return acc;
     }, {});
 
     // Convert the grouped schedules object into an array of objects
-    return Object.values(schedulesByTheater);
+    return Object.entries(schedulesByTheater).map(([theaterID, data]) => ({
+      //@ts-ignore
+      theater: data.theater,
+      //@ts-ignore
+      formats: Object.entries(data.formats).map(([format, schedules]) => ({
+        format,
+        schedules,
+      })),
+    }));
   }
 
   async update(
