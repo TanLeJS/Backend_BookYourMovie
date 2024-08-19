@@ -47,6 +47,12 @@ export class ScheduleService {
       .findById(id)
       .populate('movie')
       .populate('screen')
+      .populate({
+        path: 'screen',
+        populate: {
+          path: 'theater',
+        },
+      })
       .exec();
     if (!schedule) {
       throw new NotFoundException(`Schedule #${id} not found`);

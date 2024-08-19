@@ -36,6 +36,7 @@ export class ScheduleController {
     return this.scheduleService.findScheduleByDate(movieID, date);
   }
 
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.scheduleService.findOne(id);

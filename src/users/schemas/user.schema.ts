@@ -10,6 +10,9 @@ export class User {
   @Prop({ required: true })
   password: string;
 
+  @Prop({})
+  username: string;
+
   @Prop({ required: false })
   type: string;
 
