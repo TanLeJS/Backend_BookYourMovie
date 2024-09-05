@@ -17,7 +17,9 @@ export class ScheduleService {
   ) {}
 
   async create(createScheduleDto: CreateScheduleDto, user: IUser) {
-    const { movie, screen, date, time, format } = createScheduleDto;
+    const { movie, screen, date, time, format, ticketPrices } =
+      createScheduleDto;
+
     const { email, _id } = user;
 
     const newSchedule = await this.scheduleModel.create({
@@ -26,6 +28,7 @@ export class ScheduleService {
       date,
       time,
       format,
+      ticketPrices,
       createdBy: { _id, email },
     });
     return {

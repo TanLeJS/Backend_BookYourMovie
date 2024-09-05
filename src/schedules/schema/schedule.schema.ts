@@ -37,6 +37,13 @@ export class Schedule {
   }[];
 
   @Prop({ type: Object })
+  ticketPrices: {
+    Adult: number;
+    Senior: number;
+    Child: number;
+  };
+
+  @Prop({ type: Object })
   createdBy: {
     _id: mongoose.Schema.Types.ObjectId;
     email: string;

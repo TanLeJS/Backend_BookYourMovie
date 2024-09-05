@@ -31,6 +31,14 @@ export class CreateScheduleDto {
   @IsString()
   format: string;
 
+  @IsNotEmpty()
+  @IsString()
+  ticketPrices: {
+    Adult: number;
+    Senior: number;
+    Child: number;
+  };
+
   // @IsArray()
   // @ValidateNested({ each: true })
   // @Type(() => SeatDto)
