@@ -12,6 +12,7 @@ import { ScheduleModule } from './schedules/schedules.module';
 import { TheatersModule } from './theaters/theaters.module';
 import { UsersModule } from './users/users.module';
 import { ScreensModule } from './screens/screens.module';
+import { ApiModule } from './paypal/paypal.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ScreensModule } from './screens/screens.module';
     TheatersModule,
     PaymentsModule,
     ScreensModule,
+    ApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
