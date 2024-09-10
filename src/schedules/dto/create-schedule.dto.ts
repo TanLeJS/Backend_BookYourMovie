@@ -1,6 +1,6 @@
 import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
 
-class SeatDto {
+export class SeatDto {
   @IsString()
   @IsNotEmpty()
   label: string;

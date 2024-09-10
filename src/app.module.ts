@@ -13,6 +13,7 @@ import { TheatersModule } from './theaters/theaters.module';
 import { UsersModule } from './users/users.module';
 import { ScreensModule } from './screens/screens.module';
 import { ApiModule } from './paypal/paypal.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { ApiModule } from './paypal/paypal.module';
     PaymentsModule,
     ScreensModule,
     ApiModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
