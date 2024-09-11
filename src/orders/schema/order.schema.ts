@@ -36,10 +36,10 @@ export class Order {
 export type OrderDocument = Order & Document;
 export const OrderSchema = SchemaFactory.createForClass(Order);
 OrderSchema.index(
-  { lastModifiedDate: 1 },
+  { createdAt: 1 }, // Use the automatically created `createdAt` field for the TTL
   {
     expireAfterSeconds: 420, // 7 minutes = 420 seconds
-    partialFilterExpression: { pending: true },
+    partialFilterExpression: { pending: true }, // Only apply TTL to pending orders
   },
 );
 OrderSchema.plugin(softDeletePlugin);
